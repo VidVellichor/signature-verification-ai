@@ -1,0 +1,274 @@
+:root {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --text: #0f172a;
+  --muted: #64748b;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-gradient: linear-gradient(135deg, #4f46e5, #6366f1);
+  --primary-glow: rgba(79, 70, 229, 0.15);
+
+  --radius: 16px;
+  --radius-sm: 10px;
+
+  --btn-hover: #f1f5f9;
+
+  --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 2px 8px -1px rgba(15, 23, 42, 0.02);
+  --shadow-hover: 0 12px 30px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+}
+
+[data-theme="dark"] {
+  --bg: #090d16;
+  --card: #111827;
+  --border: #1f2937;
+  --border-strong: #374151;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-gradient: linear-gradient(135deg, #6366f1, #818cf8);
+  --primary-glow: rgba(99, 102, 241, 0.25);
+
+  --btn-hover: #1f2937;
+
+  --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35), 0 2px 8px -1px rgba(0, 0, 0, 0.2);
+  --shadow-hover: 0 12px 30px -4px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.app {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+}
+
+/* ===== Header ===== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.header__title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header__logo {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+  background: var(--card);
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+.header__logo svg { width: 22px; height: 22px; }
+
+.header__heading {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.header__sub {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  background: var(--card);
+  cursor: pointer;
+  border: 1px solid var(--border-strong);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow);
+}
+.theme-toggle:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--btn-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-hover);
+}
+.theme-toggle:active {
+  transform: translateY(1px);
+}
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ===== Cards ===== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+.card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.card__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+.card__title svg { width: 20px; height: 20px; color: var(--primary); }
+.card__title--sm { font-size: 15px; }
+.card__hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: inherit;
+  font-weight: 600;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  padding: 12px 18px;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn svg { width: 18px; height: 18px; }
+.btn:hover {
+  background: var(--btn-hover);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--primary-gradient);
+  border: none;
+  color: #fff;
+  box-shadow: 0 4px 12px var(--primary-glow);
+}
+.btn--primary:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 6px 20px var(--primary-glow);
+  color: #fff;
+}
+
+/* ===== Tool cards (Voila / Upload & Bandingkan) ===== */
+.tools-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tool-card__desc {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.65;
+  margin: 0 0 18px;
+  max-width: 640px;
+}
+
+.tool-card__cta {
+  text-decoration: none;
+}
+
+.tool-card__note {
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.tool-card__note code {
+  background: var(--btn-hover);
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-size: 11.5px;
+}
+
+.tool-card__external {
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted);
+  padding: 6px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.tool-card__external:hover {
+  background: var(--btn-hover);
+  color: var(--primary);
+}
+.tool-card__external svg { width: 16px; height: 16px; }
+
+.tool-iframe-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #0f1216; /* compare.html's own dark theme -- avoids a white flash while it loads */
+}
+.tool-iframe {
+  width: 100%;
+  height: 720px;
+  border: 0;
+  display: block;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 780px) {
+  .header { align-items: flex-start; }
+  .tool-iframe { height: 560px; }
+}

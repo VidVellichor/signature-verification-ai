@@ -1,0 +1,31 @@
+# Python virtual environments (never commit — huge, and platform-specific)
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Training/reference datasets — not needed to run the deployed app (hundreds of MB)
+DataSets/
+
+# Runtime data: SQLite DB + captured/enrolled signature images (user data, not code)
+Web/data/
+
+# Voila/notebook scratch files generated at runtime
+Web/*.png
+_c1.png
+_c2.png
+_seen1.png
+_seen2.png
+_upload_1.png
+_upload_2.png
+_v1.png
+_v2.png
+Model/_feat_cache.npz
+
+# Claude Code local settings/config — machine-specific, not app code
+.claude/
+Web/.claude/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db

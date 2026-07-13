@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bandingkan 2 Tanda Tangan — Opsi A (native web)</title>
+<style>
+  :root { --bg:#0f1216; --card:#171b21; --ink:#e8eaed; --mut:#9aa4b2; --line:#272d36;
+          --ok:#22c55e; --no:#ef4444; --accent:#3b82f6; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font-family:system-ui,Segoe UI,Roboto,sans-serif; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 28px 18px 60px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .sub { color: var(--mut); font-size: 13px; margin-bottom: 20px; }
+  .sub a { color: var(--accent); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .drop { background: var(--card); border: 1.5px dashed var(--line); border-radius: 12px;
+          min-height: 210px; display: flex; align-items: center; justify-content: center;
+          cursor: pointer; overflow: hidden; position: relative; text-align: center; }
+  .drop:hover { border-color: var(--accent); }
+  .drop img { max-width: 100%; max-height: 210px; display: block; }
+  .drop .ph { color: var(--mut); font-size: 13px; padding: 20px; }
+  .drop .tag { position:absolute; top:8px; left:10px; font-size:11px; color:var(--mut);
+               background:rgba(0,0,0,.4); padding:2px 8px; border-radius:20px; }
+  .controls { margin: 20px 0 8px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  button { background: var(--accent); color:#fff; border:0; border-radius:10px;
+           padding: 11px 22px; font-size:14px; font-weight:600; cursor:pointer; }
+  button:disabled { opacity:.5; cursor:not-allowed; }
+  .thr { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--mut); }
+  input[type=range]{ accent-color: var(--accent); }
+  .result { margin-top: 22px; background: var(--card); border:1px solid var(--line);
+            border-radius:12px; padding: 18px; display:none; }
+  .verdict { font-size: 18px; font-weight: 700; }
+  .verdict.ok { color: var(--ok); } .verdict.no { color: var(--no); }
+  .bar { height: 12px; border-radius: 20px; background:#0b0e12; overflow:hidden; margin:12px 0 6px; }
+  .bar > span { display:block; height:100%; background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e); }
+  .nums { font-size: 13px; color: var(--mut); font-variant-numeric: tabular-nums; }
+  .err { color: var(--no); font-size: 13px; margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Bandingkan 2 Tanda Tangan</h1>
+  <div class="sub">Opsi A — fitur native web (endpoint <code>/api/compare</code>, model triplet-v4).
+     Upload dua gambar → skor kemiripan (cosine) → COCOK / BEDA. &nbsp;·&nbsp; <a href="/" target="_top">← ke aplikasi utama</a></div>
+
+  <div class="grid">
+    <label class="drop" id="drop1">
+      <span class="tag">Gambar 1</span>
+      <span class="ph" id="ph1">Klik untuk pilih gambar 1</span>
+      <input type="file" id="file1" accept="image/*" hidden>
+    </label>
+    <label class="drop" id="drop2">
+      <span class="tag">Gambar 2</span>
+      <span class="ph" id="ph2">Klik untuk pilih gambar 2</span>
+      <input type="file" id="file2" accept="image/*" hidden>
+    </label>
+  </div>
+
+  <div class="controls">
+    <button id="btn" disabled>Bandingkan</button>
+    <div class="thr">
+      Threshold: <span id="thrVal">0.50</span>
+      <input type="range" id="thr" min="0.20" max="0.90" step="0.01" value="0.50">
+    </div>
+  </div>
+
+  <div class="result" id="result">
+    <div class="verdict" id="verdict">—</div>
+    <div class="bar"><span id="barFill" style="width:0%"></span></div>
+    <div class="nums" id="nums"></div>
+  </div>
+  <div class="err" id="err"></div>
+</div>
+
+<script>
+  const img = { 1: null, 2: null };            // dataURL of each picked image
+  const $ = (id) => document.getElementById(id);
+
+  function bindDrop(n) {
+    const file = $("file" + n), drop = $("drop" + n), ph = $("ph" + n);
+    file.addEventListener("change", (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      const rd = new FileReader();
+      rd.onload = (ev) => {
+        img[n] = ev.target.result;
+        // preview
+        drop.querySelectorAll("img").forEach(el => el.remove());
+        const im = new Image(); im.src = img[n]; drop.appendChild(im);
+        ph.style.display = "none";
+        $("btn").disabled = !(img[1] && img[2]);
+      };
+      rd.readAsDataURL(f);
+    });
+  }
+  bindDrop(1); bindDrop(2);
+
+  $("thr").addEventListener("input", (e) => $("thrVal").textContent = (+e.target.value).toFixed(2));
+
+  $("btn").addEventListener("click", async () => {
+    $("err").textContent = ""; $("btn").disabled = true; $("btn").textContent = "Menghitung…";
+    try {
+      const res = await fetch("/api/compare", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image1: img[1], image2: img[2], threshold: +$("thr").value }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || ("HTTP " + res.status));
+      const sim = data.similarity, pct = Math.max(0, Math.min(100, sim * 100));
+      $("result").style.display = "block";
+      const v = $("verdict");
+      v.textContent = data.verdict;
+      v.className = "verdict " + (data.match ? "ok" : "no");
+      $("barFill").style.width = pct.toFixed(1) + "%";
+      $("nums").textContent = `Kemiripan cosine = ${sim.toFixed(4)}   ·   threshold = ${data.threshold.toFixed(2)}`;
+    } catch (e) {
+      $("err").textContent = "Gagal: " + e.message;
+    } finally {
+      $("btn").disabled = false; $("btn").textContent = "Bandingkan";
+    }
+  });
+</script>
+</body>
+</html>

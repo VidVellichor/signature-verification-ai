@@ -1,0 +1,19 @@
+services:
+  # App Utama (hub page + Upload & Bandingkan Foto / Opsi A)
+  - type: web
+    name: ttd-app
+    env: python
+    plan: free
+    buildCommand: pip install -r Web/requirements.txt
+    startCommand: cd Web && uvicorn server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: VOILA_URL
+        sync: false   # isi manual di dashboard Render setelah service ttd-voila punya URL
+
+  # Gambar Tanda Tangan (Voila / Opsi B) — proses selalu-hidup terpisah
+  - type: web
+    name: ttd-voila
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements-voila.txt
+    startCommand: voila compare_app.ipynb --port=$PORT --no-browser --Voila.ip=0.0.0.0
