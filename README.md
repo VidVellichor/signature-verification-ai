@@ -21,8 +21,6 @@ Sistem terdiri dari tiga bagian:
 2. **Backend inferensi** — API FastAPI yang memuat checkpoint `.pth` dan melayani endpoint verifikasi.
 3. **Front-end web** — halaman untuk upload & bandingkan tanda tangan, plus enrollment per-pengguna.
 
-Project ini juga didokumentasikan dalam bentuk **paper bergaya IEEE** (tersedia di folder `Paper/`).
-
 ---
 
 ## 🧠 Model & Metode
@@ -62,7 +60,7 @@ Project ini juga didokumentasikan dalam bentuk **paper bergaya IEEE** (tersedia 
 | **Database** | SQLite (`users`, `refs`, `captures` + embedding BLOB) |
 | **Frontend** | HTML/CSS/JS native, Voila (notebook interaktif) |
 | **Deploy** | Render (`render.yaml`: service API + service Voila) |
-| **Riset** | Jupyter Notebook, paper IEEE (PDF) |
+| **Riset** | Jupyter Notebook, evaluasi model, dan visualisasi metrik |
 
 ---
 
@@ -111,7 +109,7 @@ ProjectAI/
 │   ├── signature_gnn_graph_verification.ipynb          # varian GNN
 │   └── EfficientNet-B0-head-ft-reproduced.pth
 ├── DataSets/                         # CEDAR & dataset lain (genuine / forgery)
-├── Paper/                            # paper IEEE (Full, Bab1-3) + penjelasan proyek (PDF)
+├── paper_figs/                       # visualisasi hasil evaluasi model
 ├── cek_model.ipynb                   # cek/uji model & threshold
 ├── compare_app.ipynb                 # app kanvas (dijalankan via Voila)
 ├── EfficientNet-B0-head-ft.pth       # checkpoint utama
@@ -123,7 +121,7 @@ ProjectAI/
 
 ## 📌 Status Project
 
-🟢 **Riset selesai + demo web berjalan.** Model sudah terlatih dan tervalidasi (val AUC ~0.975), backend & front-end sudah berfungsi, siap di-deploy ke Render. Terdokumentasi dalam paper bergaya IEEE. Pengembangan lanjut: kalibrasi threshold lintas-dataset, evaluasi robustness terhadap skilled forgery, dan penyempurnaan varian GNN.
+🟢 **Riset selesai + demo web berjalan.** Model sudah terlatih dan tervalidasi (val AUC ~0.975), backend & front-end sudah berfungsi, siap di-deploy ke Render. Pengembangan lanjut: kalibrasi threshold lintas-dataset, evaluasi robustness terhadap skilled forgery, dan penyempurnaan varian GNN.
 
 ---
 
