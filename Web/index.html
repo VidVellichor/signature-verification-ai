@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=5" />
+  <link rel="stylesheet" href="styles.css?v=8" />
 </head>
 <body>
   <div class="app">
@@ -24,13 +24,11 @@
         </div>
         <div>
           <h1 class="header__heading">Fake handwriting detector</h1>
-          <p class="header__sub">Gambar di Voila atau upload &amp; bandingkan foto tanda tangan</p>
+          <p class="header__sub">Upload &amp; bandingkan foto tanda tangan atau gambar di Voila</p>
         </div>
       </div>
 
       <div class="header__actions">
-
-
         <button id="themeToggle" class="btn btn--icon theme-toggle" title="Toggle theme" aria-label="Toggle theme">
           <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="4"></circle>
@@ -45,39 +43,7 @@
 
     <!-- ===== Main: two tool cards ===== -->
     <main class="tools-stack">
-      <!-- ---- Gambar Tanda Tangan -> Voila (Opsi B) ---- -->
-      <section class="card tool-card">
-        <div class="card__head">
-          <div class="card__title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
-                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M3 19c3.333 -2 5 -4 5 -6c0 -3 -1 -3 -2 -3s-2.032 1.085 -2 3c.034 2.048 1.658 4.877 2.5 6c1.5 2 2.5 2 3.5 1s5.5 -6 8.5 -9" />
-              <path d="M18 11l1 2" />
-            </svg>
-            <span>Gambar Tanda Tangan</span>
-          </div>
-        </div>
-        <p class="tool-card__desc">
-          Gambar dua tanda tangan langsung di kanvas (atau upload) untuk dibandingkan.
-          Fitur ini berjalan di aplikasi terpisah <strong>Voila</strong> yang memuat model
-          &amp; logika compare yang sama dengan aplikasi ini.
-        </p>
-        <a class="btn btn--primary tool-card__cta" href="{{VOILA_URL}}" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M11 7h-5a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-5" />
-            <path d="M10 14l10 -10" />
-            <path d="M15 4h5v5" />
-          </svg>
-          <span>Buka di Voila</span>
-        </a>
-        <p class="tool-card__note">
-          Pastikan server Voila sudah berjalan
-          (<code>voila compare_app.ipynb --port=8866</code>) sebelum membuka tautan ini.
-        </p>
-      </section>
-
-      <!-- ---- Upload & Bandingkan Foto -> compare.html (Opsi A) ---- -->
+      <!-- 1. Upload & Bandingkan Foto -> compare.html (Opsi A) -->
       <section class="card tool-card tool-card--wide">
         <div class="card__head">
           <div class="card__title">
@@ -97,12 +63,38 @@
           </a>
         </div>
         <div class="tool-iframe-wrap">
-          <iframe src="/compare.html" class="tool-iframe" title="Bandingkan 2 Tanda Tangan" loading="lazy"></iframe>
+          <iframe id="compareFrame" src="/compare.html" class="tool-iframe" title="Bandingkan 2 Tanda Tangan" loading="lazy"></iframe>
         </div>
+      </section>
+
+      <!-- 2. Gambar Tanda Tangan -> Voila (Opsi B) -->
+      <section class="card tool-card">
+        <div class="card__head">
+          <div class="card__title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 19c3.333 -2 5 -4 5 -6c0 -3 -1 -3 -2 -3s-2.032 1.085 -2 3c.034 2.048 1.658 4.877 2.5 6c1.5 2 2.5 2 3.5 1s5.5 -6 8.5 -9" />
+              <path d="M18 11l1 2" />
+            </svg>
+            <span>Gambar Tanda Tangan</span>
+          </div>
+        </div>
+        <p class="tool-card__desc">
+          Gambar dua tanda tangan langsung di kanvas (atau upload) untuk dibandingkan.
+        </p>
+        <a class="btn btn--primary tool-card__cta" href="{{VOILA_URL}}" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 7h-5a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-5" />
+            <path d="M10 14l10 -10" />
+            <path d="M15 4h5v5" />
+          </svg>
+          <span>Buka di Voila</span>
+        </a>
       </section>
     </main>
   </div>
 
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>

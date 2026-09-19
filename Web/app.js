@@ -1,14 +1,11 @@
 /* ============================================================
    Fake Handwriting Detector — front-end logic
-   The app itself is now just a hub linking to two tools:
-     - "Gambar Tanda Tangan" -> Voila (canvas drawing + compare)
-     - "Upload & Bandingkan Foto" -> compare.html, embedded (Opsi A)
-   The only remaining logic here is the light/dark theme toggle.
    ============================================================ */
 
 const themeToggle = document.getElementById("themeToggle");
 const sunIcon = themeToggle.querySelector(".sun-icon");
 const moonIcon = themeToggle.querySelector(".moon-icon");
+const compareFrame = document.getElementById("compareFrame");
 
 const savedTheme = localStorage.getItem("theme");
 const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -31,6 +28,24 @@ function setTheme(theme) {
     sunIcon.style.display = "block";
     moonIcon.style.display = "none";
   }
+
+  // Kirim sinyal perubahan tema ke iframe compare.html
+  if (compareFrame && compareFrame.contentWindow) {
+    try {
+      compareFrame.contentWindow.postMessage({ type: "THEME_CHANGE", theme: theme }, "*");
+    } catch (e) {}
+  }
 }
 
 setTheme(initialTheme);
+
+/* ===== AUTO-RESIZE iframe compare.html =====
+   compare.html kirim {type:"FRAME_HEIGHT", height:N} tiap kontennya berubah.
+   Parent set tinggi iframe persis setinggi isi → nggak ada space kosong di bawah. */
+window.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "FRAME_HEIGHT" && typeof event.data.height === "number") {
+    if (compareFrame) {
+      compareFrame.style.height = Math.ceil(event.data.height) + "px";
+    }
+  }
+});
