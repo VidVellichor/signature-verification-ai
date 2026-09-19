@@ -4,8 +4,8 @@ venv/
 __pycache__/
 *.pyc
 
-# Training/reference datasets — not needed to run the deployed app (hundreds of MB)
-DataSets/
+# Windows thumbnail cache files inside datasets
+Thumbs.db
 
 # Runtime data: SQLite DB + captured/enrolled signature images (user data, not code)
 Web/data/
