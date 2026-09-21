@@ -1,4 +1,4 @@
-# ✍️ Signature Verification AI — Deteksi Tanda Tangan Asli vs Palsu
+# ✍️ Signature Verification AI: Deteksi Tanda Tangan Asli vs Palsu
 
 > **Sistem verifikasi tanda tangan berbasis deep learning.** Ubah dua gambar tanda tangan menjadi *embedding* dengan EfficientNet-B0, lalu tentukan **COCOK (asli)** atau **BEDA (palsu)** dari skor kemiripan cosine.
 
@@ -14,18 +14,18 @@
 
 ## 📖 Deskripsi
 
-Project ini adalah **offline signature verification** — memverifikasi apakah sebuah tanda tangan **asli (genuine)** atau **palsu (forgery)** menggunakan deep metric learning. Alih-alih mengklasifikasi langsung, model mempelajari **ruang embedding**: tanda tangan dari orang yang sama dipetakan berdekatan, tanda tangan orang berbeda / palsu dipetakan berjauhan. Keputusan diambil dari **cosine similarity** antara embedding gambar uji dan tanda tangan acuan.
+Project ini adalah **offline signature verification** untuk memverifikasi apakah sebuah tanda tangan **asli (genuine)** atau **palsu (forgery)** menggunakan deep metric learning. Alih-alih mengklasifikasi langsung, model mempelajari **ruang embedding**: tanda tangan dari orang yang sama dipetakan berdekatan, tanda tangan orang berbeda / palsu dipetakan berjauhan. Keputusan diambil dari **cosine similarity** antara embedding gambar uji dan tanda tangan acuan.
 
 Sistem terdiri dari tiga bagian:
-1. **Riset & training** — notebook untuk melatih dan mengevaluasi model (EfficientNet-B0 + varian GNN).
-2. **Backend inferensi** — API FastAPI yang memuat checkpoint `.pth` dan melayani endpoint verifikasi.
-3. **Front-end web** — halaman untuk upload & bandingkan tanda tangan, plus enrollment per-pengguna.
+1. **Riset & training**: notebook untuk melatih dan mengevaluasi model (EfficientNet-B0 + varian GNN).
+2. **Backend inferensi**: API FastAPI yang memuat checkpoint `.pth` dan melayani endpoint verifikasi.
+3. **Front-end web**: halaman untuk upload & bandingkan tanda tangan, plus enrollment per-pengguna.
 
 ---
 
 ## 🧠 Model & Metode
 
-- **Arsitektur:** `EfficientNetEmbedder` — backbone **EfficientNet-B0** (torchvision) + projection head (`Linear 1280→512 → BatchNorm → ReLU → Dropout → Linear 512→512 → BatchNorm`), output di-**L2-normalize** menjadi embedding 512 dimensi.
+- **Arsitektur:** `EfficientNetEmbedder` dengan backbone **EfficientNet-B0** (torchvision) + projection head (`Linear 1280→512 → BatchNorm → ReLU → Dropout → Linear 512→512 → BatchNorm`), output di-**L2-normalize** menjadi embedding 512 dimensi.
 - **Training:** **batch-hard triplet loss**, dengan strategi **head fine-tuning** (backbone dibekukan, hanya projection head dilatih ulang) sebagai model **Proposed**.
 - **Dataset:** gabungan **CEDAR + GPDS + dataset lokal** (± **221 penulis**).
 - **Hasil validasi:** best **val AUC ≈ 0.975** (notebook head-ft); checkpoint head-ft dilaporkan AUC ~0.985 dengan separasi antar-orang jauh lebih tajam dibanding varian triplet-v4 lama.
@@ -33,19 +33,19 @@ Sistem terdiri dari tiga bagian:
 - **Threshold keputusan:** cosine similarity, default **0.50** (dikalibrasi dari hold-out GPDS: asli-orang-sama rata-rata ~0.85, beda-orang ~0.04). Bisa diatur lewat slider di UI.
 - **Varian eksperimen:** notebook **GNN graph verification** sebagai pendekatan pembanding.
 
-> Angka di atas diambil langsung dari kode (`Web/server.py`) dan output notebook training — bukan estimasi.
+> Angka di atas diambil langsung dari kode (`Web/server.py`) dan output notebook training (bukan estimasi).
 
 ---
 
 ## ✨ Fitur Utama
 
-- 🔍 **Bandingkan 2 tanda tangan (1-vs-1)** — upload dua gambar, dapatkan skor kemiripan cosine + verdict **COCOK / TIDAK COCOK** (endpoint `/api/compare`).
-- 👤 **Enrollment per-pengguna** — daftarkan 1 tanda tangan asli per label (Nama/NIM/User ID). Sistem otomatis membuat **16 augmentasi ringan** (rotasi ±5°, skala ±5%, translasi ±3%, brightness/contrast ±8%, noise halus) dan menyimpan **embedding terkomputasi** sebagai BLOB di database.
-- ✅ **Verifikasi terhadap acuan** — cocokkan tanda tangan uji dengan tanda tangan asli pengguna terdaftar (endpoint `/api/verify`), skor = mean cosine terhadap acuan.
-- 🖊️ **Mode gambar kanvas (Voila)** — opsi menggambar tanda tangan langsung di kanvas untuk dibandingkan (layanan Voila terpisah).
-- 🎚️ **Threshold interaktif** — slider di UI untuk menyetel titik keputusan sesuai kebutuhan.
-- 🗄️ **Riwayat & manajemen** — capture history, daftar user terdaftar, thumbnail acuan, hapus enrollment (SQLite `detector.db`).
-- 🔒 **Backend yang diamankan** — pembatasan ukuran body (anti-DoS), guard decompression-bomb, allow-list path & file front-end (mencegah kebocoran `detector.db` / source), validasi gambar (tolak kanvas kosong).
+- 🔍 **Bandingkan 2 tanda tangan (1-vs-1)**: upload dua gambar, dapatkan skor kemiripan cosine + verdict **COCOK / TIDAK COCOK** (endpoint `/api/compare`).
+- 👤 **Enrollment per-pengguna**: daftarkan 1 tanda tangan asli per label (Nama/NIM/User ID). Sistem otomatis membuat **16 augmentasi ringan** (rotasi ±5°, skala ±5%, translasi ±3%, brightness/contrast ±8%, noise halus) dan menyimpan **embedding terkomputasi** sebagai BLOB di database.
+- ✅ **Verifikasi terhadap acuan**: cocokkan tanda tangan uji dengan tanda tangan asli pengguna terdaftar (endpoint `/api/verify`), skor = mean cosine terhadap acuan.
+- 🖊️ **Mode gambar kanvas (Voila)**: opsi menggambar tanda tangan langsung di kanvas untuk dibandingkan (layanan Voila terpisah).
+- 🎚️ **Threshold interaktif**: slider di UI untuk menyetel titik keputusan sesuai kebutuhan.
+- 🗄️ **Riwayat & manajemen**: capture history, daftar user terdaftar, thumbnail acuan, hapus enrollment (SQLite `detector.db`).
+- 🔒 **Backend yang diamankan**: pembatasan ukuran body (anti-DoS), guard decompression-bomb, allow-list path & file front-end (mencegah kebocoran `detector.db` / source), validasi gambar (tolak kanvas kosong).
 
 ---
 
@@ -89,7 +89,7 @@ Buka `http://localhost:3000` untuk hub utama, atau `http://localhost:3000/compar
 `render.yaml` sudah mendefinisikan dua service: **ttd-app** (FastAPI) dan **ttd-voila** (Voila). Set env var `VOILA_URL` di dashboard Render setelah service Voila punya URL.
 
 ### Reproduksi Training
-Buka `CodeTrain/signature_efficientnet_head_ft_TRAINING.ipynb` — melatih ulang projection head di atas backbone beku dengan batch-hard triplet loss (CEDAR + GPDS + data lokal) dan menyimpan checkpoint hasilnya.
+Buka `CodeTrain/signature_efficientnet_head_ft_TRAINING.ipynb` untuk melatih ulang projection head di atas backbone beku dengan batch-hard triplet loss (CEDAR + GPDS + data lokal) dan menyimpan checkpoint hasilnya.
 
 ---
 
@@ -125,4 +125,4 @@ ProjectAI/
 
 ---
 
-<sub>Dibuat oleh **David** — mahasiswa IT, penerima beasiswa **PPTI BCA**. Fokus di deep learning terapan & AI engineering. Terbuka untuk kolaborasi riset/produk. 🤝</sub>
+<sub>Dibuat oleh **David** (mahasiswa IT, penerima beasiswa **PPTI BCA**. Fokus di deep learning terapan & AI engineering. Terbuka untuk kolaborasi riset/produk. 🤝</sub>
